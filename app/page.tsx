@@ -1,14 +1,11 @@
-import Navbar from "@/components/navbar";
-import Dashboard from "@/components/dashboard";
 
-export default function Home() {
+export default function Page() {
   return (
-    <main className="min-h-screen bg-sky-50">
-      <Navbar />
-
-      <div className="max-w-7xl mx-auto px-6 py-8">
-        <Dashboard />
-      </div>
-    </main>
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">Dashboard Content Here</h1>
+      <p className="text-gray-600 mt-2">
+        Welcome to Needleads SMO CRM System
+      </p>
+    </div>
   );
 }
