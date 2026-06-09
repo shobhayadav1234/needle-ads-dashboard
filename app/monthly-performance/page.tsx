@@ -1,111 +1,173 @@
+"use client";
+
 import {
-    CalendarCheck,
-    CheckCircle,
-    Smile,
-    TrendingUp,
-    Trophy,
-    Award,
+  CalendarCheck,
+  CheckCircle2,
+  Users,
+  TrendingUp,
+  Trophy,
+  Award,
+  BarChart3,
 } from "lucide-react";
 
-export default function MonthlyPerformancePage() {
-    return (
-        <div className="min-h-screen bg-gray-50 p-6">
-            {/* Header */}
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-slate-800">
-                    Monthly Performance Dashboard
-                </h1>
-                <p className="text-slate-500 mt-2">
-                    Track employee monthly performance metrics and achievements.
-                </p>
+import { monthlyPerformanceData } from "@/data/employees";
+import PageHeader from "@/components/ui/header";
+import { pageContent } from "@/data/employees";
+
+export default function Page() {
+  const {
+    attendancePercentage,
+    taskCompletionRate,
+    clientSatisfactionScore,
+    productivityScore,
+    monthlyRanking,
+    employeePerformanceGrade,
+    summary,
+  } = monthlyPerformanceData;
+
+  const stats = [
+    {
+      title: "Attendance Percentage",
+      value: `${attendancePercentage}%`,
+      icon: CalendarCheck,
+      color: "text-green-600",
+    },
+    {
+      title: "Task Completion Rate",
+      value: `${taskCompletionRate}%`,
+      icon: CheckCircle2,
+      color: "text-[#1ea7d7]",
+    },
+    {
+      title: "Client Satisfaction Score",
+      value: clientSatisfactionScore,
+      icon: Users,
+      color: "text-purple-600",
+    },
+    {
+      title: "Productivity Score",
+      value: `${productivityScore}%`,
+      icon: TrendingUp,
+      color: "text-[#0b5fa5]",
+    },
+    {
+      title: "Monthly Ranking",
+      value: `#${monthlyRanking}`,
+      icon: Trophy,
+      color: "text-orange-500",
+    },
+    {
+      title: "Employee Performance Grade",
+      value: employeePerformanceGrade,
+      icon: Award,
+      color: "text-pink-600",
+    },
+  ];
+
+  return (
+    <div className="min-h-screen bg-slate-50 p-6">
+
+     {/* HEADER (CRM unified style) */}
+             <PageHeader
+               title={pageContent.monthlyPerformance.title}
+               subtitle={pageContent.monthlyPerformance.subtitle}
+             />
+  
+
+      {/* STATS GRID (Task cards style) */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
+
+        {stats.map((item, index) => {
+          const Icon = item.icon;
+
+          return (
+            <div
+              key={index}
+              className="bg-white rounded-2xl border shadow-sm p-5 hover:shadow-md transition"
+            >
+              <div className="flex justify-between items-center">
+
+                <div>
+                  <p className="text-slate-500 text-sm">
+                    {item.title}
+                  </p>
+
+                  <h3 className={`text-3xl font-bold mt-1 ${item.color}`}>
+                    {item.value}
+                  </h3>
+                </div>
+
+                <Icon size={28} className={item.color} />
+
+              </div>
             </div>
+          );
+        })}
 
-            {/* Performance Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      </div>
 
-                {/* Attendance Percentage */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <p className="text-gray-500">Attendance Percentage</p>
-                            <h2 className="text-3xl font-bold mt-2">96%</h2>
-                        </div>
-                        <CalendarCheck size={40} className="text-green-600" />
-                    </div>
-                </div>
+      {/* SUMMARY SECTION (Task style box) */}
+      <div className="bg-white rounded-2xl border shadow-sm p-5 md:p-6 mb-6">
 
-                {/* Task Completion Rate */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <p className="text-gray-500">Task Completion Rate</p>
-                            <h2 className="text-3xl font-bold mt-2">92%</h2>
-                        </div>
-                        <CheckCircle size={40} className="text-blue-600" />
-                    </div>
-                </div>
+        <h2 className="text-lg font-bold text-slate-800 mb-4">
+          Monthly Summary
+        </h2>
 
-                {/* Client Satisfaction Score */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <p className="text-gray-500">Client Satisfaction Score</p>
-                            <h2 className="text-3xl font-bold mt-2">4.8/5</h2>
-                        </div>
-                        <Smile size={40} className="text-yellow-500" />
-                    </div>
-                </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
 
-                {/* Productivity Score */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <p className="text-gray-500">Productivity Score</p>
-                            <h2 className="text-3xl font-bold mt-2">88%</h2>
-                        </div>
-                        <TrendingUp size={40} className="text-purple-600" />
-                    </div>
-                </div>
+          <div className="bg-slate-50 rounded-xl p-4">
+            <p className="text-slate-500 text-sm">Total Tasks</p>
+            <h3 className="text-xl font-bold text-[#0b5fa5] mt-1">
+              {summary.totalTasks}
+            </h3>
+          </div>
 
-                {/* Monthly Ranking */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <p className="text-gray-500">Monthly Ranking</p>
-                            <h2 className="text-3xl font-bold mt-2">#3</h2>
-                        </div>
-                        <Trophy size={40} className="text-orange-500" />
-                    </div>
-                </div>
+          <div className="bg-slate-50 rounded-xl p-4">
+            <p className="text-slate-500 text-sm">Completed Tasks</p>
+            <h3 className="text-xl font-bold text-green-600 mt-1">
+              {summary.completedTasks}
+            </h3>
+          </div>
 
-                {/* Employee Performance Grade */}
-                <div className="bg-white p-6 rounded-xl shadow-sm border">
-                    <div className="flex justify-between items-center">
-                        <div>
-                            <p className="text-gray-500">Performance Grade</p>
-                            <h2 className="text-3xl font-bold mt-2">A+</h2>
-                        </div>
-                        <Award size={40} className="text-red-500" />
-                    </div>
-                </div>
+          <div className="bg-slate-50 rounded-xl p-4">
+            <p className="text-slate-500 text-sm">Clients Handled</p>
+            <h3 className="text-xl font-bold text-purple-600 mt-1">
+              {summary.clientsHandled}
+            </h3>
+          </div>
 
-            </div>
+          <div className="bg-slate-50 rounded-xl p-4">
+            <p className="text-slate-500 text-sm">Working Days</p>
+            <h3 className="text-xl font-bold text-orange-500 mt-1">
+              {summary.workingDays}
+            </h3>
+          </div>
 
-            {/* Summary Section */}
-            <div className="mt-8 bg-white rounded-xl border p-6 shadow-sm">
-                <h2 className="text-xl font-semibold mb-4">
-                    Monthly Performance Summary
-                </h2>
-
-                <div className="space-y-3 text-gray-700">
-                    <p>✅ Attendance Percentage: 96%</p>
-                    <p>✅ Task Completion Rate: 92%</p>
-                    <p>✅ Client Satisfaction Score: 4.8/5</p>
-                    <p>✅ Productivity Score: 88%</p>
-                    <p>🏆 Monthly Ranking: #3</p>
-                    <p>🎖️ Employee Performance Grade: A+</p>
-                </div>
-            </div>
         </div>
-    );
+
+      </div>
+
+      {/* GRADE SECTION (simple highlight card like task system) */}
+      <div className="bg-white rounded-2xl border shadow-sm p-6">
+
+        <h2 className="text-lg font-bold text-slate-800 mb-3">
+          Employee Performance Grade
+        </h2>
+
+        <div className="flex items-center justify-between">
+
+          <p className="text-slate-600 text-sm">
+            Based on attendance, productivity, task completion and client satisfaction.
+          </p>
+
+          <div className="bg-slate-900 text-white px-6 py-3 rounded-xl text-2xl font-bold">
+            {employeePerformanceGrade}
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  );
 }

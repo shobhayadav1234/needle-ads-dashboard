@@ -1,82 +1,177 @@
 "use client";
 
-import { useState } from "react";
+import { dailyAttendance, employees } from "@/data/employees";
+import {
+    LogIn,
+    LogOut,
+    Coffee,
+    Clock3,
+    User,
+    CalendarDays,
+} from "lucide-react";
+
+import PageHeader from "@/components/ui/header";
+import { pageContent } from "@/data/employees";
+
+
 
 export default function DailyAttendancePage() {
-    const [loginTime, setLoginTime] = useState("");
-    const [logoutTime, setLogoutTime] = useState("");
-    const [breakTime, setBreakTime] = useState("");
-
-    const calculateHours = () => {
-        if (!loginTime || !logoutTime) return 0;
-
-        const login = new Date(`2024-01-01 ${loginTime}`);
-        const logout = new Date(`2024-01-01 ${logoutTime}`);
-
-        const diff = (logout.getTime() - login.getTime()) / (1000 * 60 * 60);
-
-        return (diff - Number(breakTime || 0)).toFixed(2);
-    };
+    const attendance = dailyAttendance[0];
+    const employee = employees[0];
 
     return (
-        <div className="p-6 bg-gray-100 min-h-screen">
+        <div className="min-h-screen bg-slate-50 p-6">
+          {/* HEADER (CRM unified style) */}
+                            <PageHeader
+                              title={pageContent.dailyAttendance.title}
+                              subtitle={pageContent.dailyAttendance.subtitle}
+                            />
 
-            <h1 className="text-2xl font-bold text-[#0B3C5D] mb-6">
-                Daily Attendance
-            </h1>
-
-            {/* FORM CARD */}
-            <div className="bg-white p-6 rounded-xl shadow-md grid gap-4 max-w-2xl">
-
-                {/* LOGIN TIME */}
-                <div>
-                    <label className="text-sm font-medium">Login Time</label>
-                    <input
-                        type="time"
-                        value={loginTime}
-                        onChange={(e) => setLoginTime(e.target.value)}
-                        className="w-full border p-2 rounded mt-1"
+            {/* Employee Card */}
+            <div className="mb-8 rounded-2xl border bg-white p-6 shadow-sm">
+                <div className="flex flex-col items-center gap-4 md:flex-row">
+                    <img
+                        src={employee.profilePhoto}
+                        alt={employee.name}
+                        className="h-24 w-24 rounded-full border-4 border-slate-100 object-cover"
                     />
+
+                    <div>
+                        <h2 className="text-2xl font-bold text-slate-800">
+                            {employee.name}
+                        </h2>
+
+                        <div className="mt-2 flex flex-wrap gap-4 text-sm text-slate-600">
+                            <div className="flex items-center gap-2">
+                                <User size={16} />
+                                {employee.designation}
+                            </div>
+
+                            <div className="flex items-center gap-2">
+                                <CalendarDays size={16} />
+                                {employee.id}
+                            </div>
+                        </div>
+                    </div>
                 </div>
+            </div>
 
-                {/* LOGOUT TIME */}
-                <div>
-                    <label className="text-sm font-medium">Logout Time</label>
-                    <input
-                        type="time"
-                        value={logoutTime}
-                        onChange={(e) => setLogoutTime(e.target.value)}
-                        className="w-full border p-2 rounded mt-1"
-                    />
-                </div>
+            {/* Attendance Cards */}
+            <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+                {/* Login */}
+                <div className="rounded-2xl bg-white p-6 shadow-sm border hover:shadow-md transition">
+                    <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-slate-600">
+                            Login Time
+                        </h3>
 
-                {/* BREAK TIME */}
-                <div>
-                    <label className="text-sm font-medium">Break Time (hours)</label>
-                    <input
-                        type="number"
-                        value={breakTime}
-                        onChange={(e) => setBreakTime(e.target.value)}
-                        className="w-full border p-2 rounded mt-1"
-                        placeholder="e.g. 1"
-                    />
-                </div>
+                        <div className="rounded-xl bg-green-100 p-3">
+                            <LogIn className="text-green-600" size={22} />
+                        </div>
+                    </div>
 
-                {/* RESULT */}
-                <div className="bg-[#0B3C5D] text-white p-4 rounded-lg">
-                    <h2 className="text-lg font-semibold mb-2">Working Summary</h2>
-
-                    <p>Login Time: {loginTime || "--:--"}</p>
-                    <p>Logout Time: {logoutTime || "--:--"}</p>
-                    <p>Break Time: {breakTime || 0} Hour</p>
-
-                    <hr className="my-2 border-white/30" />
-
-                    <p className="font-bold">
-                        Total Working Hours: {calculateHours()} hrs
+                    <p className="mt-5 text-3xl font-bold text-slate-800">
+                        {attendance.loginTime}
                     </p>
+
+                    <button className="mt-5 w-full rounded-xl bg-green-600 py-2.5 font-medium text-white hover:bg-green-700">
+                        Login
+                    </button>
                 </div>
 
+                {/* Logout */}
+                <div className="rounded-2xl bg-white p-6 shadow-sm border hover:shadow-md transition">
+                    <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-slate-600">
+                            Logout Time
+                        </h3>
+
+                        <div className="rounded-xl bg-red-100 p-3">
+                            <LogOut className="text-red-600" size={22} />
+                        </div>
+                    </div>
+
+                    <p className="mt-5 text-3xl font-bold text-slate-800">
+                        {attendance.logoutTime}
+                    </p>
+
+                    <button className="mt-5 w-full rounded-xl bg-red-600 py-2.5 font-medium text-white hover:bg-red-700">
+                        Logout
+                    </button>
+                </div>
+
+                {/* Break */}
+                <div className="rounded-2xl bg-white p-6 shadow-sm border hover:shadow-md transition">
+                    <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-slate-600">
+                            Break Time
+                        </h3>
+
+                        <div className="rounded-xl bg-yellow-100 p-3">
+                            <Coffee className="text-yellow-600" size={22} />
+                        </div>
+                    </div>
+
+                    <p className="mt-5 text-3xl font-bold text-slate-800">
+                        {attendance.breakTime}
+                    </p>
+
+                    <button className="mt-5 w-full rounded-xl bg-yellow-500 py-2.5 font-medium text-white hover:bg-yellow-600">
+                        Start Break
+                    </button>
+                </div>
+
+                {/* Working Hours */}
+                <div className="rounded-2xl bg-white p-6 shadow-sm border hover:shadow-md transition">
+                    <div className="flex items-center justify-between">
+                        <h3 className="font-semibold text-slate-600">
+                            Working Hours
+                        </h3>
+
+                        <div className="rounded-xl bg-blue-100 p-3">
+                            <Clock3 className="text-blue-600" size={22} />
+                        </div>
+                    </div>
+
+                    <p className="mt-5 text-3xl font-bold text-slate-800">
+                        {attendance.totalWorkingHours}
+                    </p>
+
+                    <div className="mt-5 rounded-xl bg-blue-50 p-3 text-center text-sm font-medium text-blue-700">
+                        Today's Productivity
+                    </div>
+                </div>
+            </div>
+
+            {/* Summary */}
+            <div className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
+                <h3 className="mb-4 text-lg font-semibold">
+                    Attendance Summary
+                </h3>
+
+                <div className="grid gap-4 md:grid-cols-4">
+                    <div className="rounded-xl bg-slate-50 p-4">
+                        <p className="text-sm text-slate-500">Login</p>
+                        <p className="font-bold">{attendance.loginTime}</p>
+                    </div>
+
+                    <div className="rounded-xl bg-slate-50 p-4">
+                        <p className="text-sm text-slate-500">Logout</p>
+                        <p className="font-bold">{attendance.logoutTime}</p>
+                    </div>
+
+                    <div className="rounded-xl bg-slate-50 p-4">
+                        <p className="text-sm text-slate-500">Break</p>
+                        <p className="font-bold">{attendance.breakTime}</p>
+                    </div>
+
+                    <div className="rounded-xl bg-slate-50 p-4">
+                        <p className="text-sm text-slate-500">Working Hours</p>
+                        <p className="font-bold">
+                            {attendance.totalWorkingHours}
+                        </p>
+                    </div>
+                </div>
             </div>
         </div>
     );
