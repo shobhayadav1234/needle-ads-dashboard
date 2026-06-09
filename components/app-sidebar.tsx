@@ -27,13 +27,17 @@ import {
 
 const data = {
   user: {
-    name: "Shobha Yadav",
-    email: "shobha@example.com",
+    name: "Needle Ads",
+    email: "needleads@gmail.com",
     avatar: "/avatars/shadcn.jpg",
   },
 
   navMain: [
-   
+    {
+      title: "Executive-profile",
+      url: "/executive-profile",
+      icon: User,
+    },
     {
       title: "Daily Attendance",
       url: "/daily-attendance",
