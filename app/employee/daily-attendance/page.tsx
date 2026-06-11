@@ -1,6 +1,12 @@
 "use client";
 
-import { dailyAttendance, employees } from "@/data/employees";
+import { useState } from "react";
+import {
+    dailyAttendance,
+    employees,
+    pageContent,
+} from "@/data/admin";
+
 import {
     LogIn,
     LogOut,
@@ -11,21 +17,54 @@ import {
 } from "lucide-react";
 
 import PageHeader from "@/components/ui/header";
-import { pageContent } from "@/data/employees";
-
-
 
 export default function DailyAttendancePage() {
-    const attendance = dailyAttendance[0];
-    const employee = employees[0];
+    const attendance = dailyAttendance?.[0];
+    const employee = employees?.[0];
+
+    const [loginTime, setLoginTime] = useState(
+        attendance?.loginTime || "--:--"
+    );
+    const [logoutTime, setLogoutTime] = useState(
+        attendance?.logoutTime || "--:--"
+    );
+    const [breakTime, setBreakTime] = useState(
+        attendance?.breakTime || "00:00"
+    );
+
+    if (!attendance || !employee) {
+        return (
+            <div className="min-h-screen flex items-center justify-center text-gray-500">
+                No attendance data found
+            </div>
+        );
+    }
+
+    const getCurrentTime = () =>
+        new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+
+    const handleLogin = () => {
+        setLoginTime(getCurrentTime());
+    };
+
+    const handleLogout = () => {
+        setLogoutTime(getCurrentTime());
+    };
+
+    const handleBreak = () => {
+        setBreakTime(getCurrentTime());
+    };
 
     return (
         <div className="min-h-screen bg-slate-50 p-6">
-          {/* HEADER (CRM unified style) */}
-                            <PageHeader
-                              title={pageContent.dailyAttendance.title}
-                              subtitle={pageContent.dailyAttendance.subtitle}
-                            />
+            {/* Header */}
+            <PageHeader
+                title={pageContent.dailyAttendance.title}
+                subtitle={pageContent.dailyAttendance.subtitle}
+            />
 
             {/* Employee Card */}
             <div className="mb-8 rounded-2xl border bg-white p-6 shadow-sm">
@@ -71,10 +110,13 @@ export default function DailyAttendancePage() {
                     </div>
 
                     <p className="mt-5 text-3xl font-bold text-slate-800">
-                        {attendance.loginTime}
+                        {loginTime}
                     </p>
 
-                    <button className="mt-5 w-full rounded-xl bg-green-600 py-2.5 font-medium text-white hover:bg-green-700">
+                    <button
+                        onClick={handleLogin}
+                        className="mt-5 w-full rounded-xl bg-green-600 py-2.5 font-medium text-white hover:bg-green-700 transition"
+                    >
                         Login
                     </button>
                 </div>
@@ -92,10 +134,13 @@ export default function DailyAttendancePage() {
                     </div>
 
                     <p className="mt-5 text-3xl font-bold text-slate-800">
-                        {attendance.logoutTime}
+                        {logoutTime}
                     </p>
 
-                    <button className="mt-5 w-full rounded-xl bg-red-600 py-2.5 font-medium text-white hover:bg-red-700">
+                    <button
+                        onClick={handleLogout}
+                        className="mt-5 w-full rounded-xl bg-red-600 py-2.5 font-medium text-white hover:bg-red-700 transition"
+                    >
                         Logout
                     </button>
                 </div>
@@ -113,10 +158,13 @@ export default function DailyAttendancePage() {
                     </div>
 
                     <p className="mt-5 text-3xl font-bold text-slate-800">
-                        {attendance.breakTime}
+                        {breakTime}
                     </p>
 
-                    <button className="mt-5 w-full rounded-xl bg-yellow-500 py-2.5 font-medium text-white hover:bg-yellow-600">
+                    <button
+                        onClick={handleBreak}
+                        className="mt-5 w-full rounded-xl bg-yellow-500 py-2.5 font-medium text-white hover:bg-yellow-600 transition"
+                    >
                         Start Break
                     </button>
                 </div>
@@ -143,7 +191,7 @@ export default function DailyAttendancePage() {
                 </div>
             </div>
 
-            {/* Summary */}
+            {/* Attendance Summary */}
             <div className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
                 <h3 className="mb-4 text-lg font-semibold">
                     Attendance Summary
@@ -152,21 +200,23 @@ export default function DailyAttendancePage() {
                 <div className="grid gap-4 md:grid-cols-4">
                     <div className="rounded-xl bg-slate-50 p-4">
                         <p className="text-sm text-slate-500">Login</p>
-                        <p className="font-bold">{attendance.loginTime}</p>
+                        <p className="font-bold">{loginTime}</p>
                     </div>
 
                     <div className="rounded-xl bg-slate-50 p-4">
                         <p className="text-sm text-slate-500">Logout</p>
-                        <p className="font-bold">{attendance.logoutTime}</p>
+                        <p className="font-bold">{logoutTime}</p>
                     </div>
 
                     <div className="rounded-xl bg-slate-50 p-4">
                         <p className="text-sm text-slate-500">Break</p>
-                        <p className="font-bold">{attendance.breakTime}</p>
+                        <p className="font-bold">{breakTime}</p>
                     </div>
 
                     <div className="rounded-xl bg-slate-50 p-4">
-                        <p className="text-sm text-slate-500">Working Hours</p>
+                        <p className="text-sm text-slate-500">
+                            Working Hours
+                        </p>
                         <p className="font-bold">
                             {attendance.totalWorkingHours}
                         </p>

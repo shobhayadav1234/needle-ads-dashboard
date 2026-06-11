@@ -2,8 +2,10 @@
 
 import * as React from "react"
 import Image from "next/image"
+
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
+
 import {
   Sidebar,
   SidebarContent,
@@ -25,70 +27,164 @@ import {
   CalendarDays,
 } from "lucide-react"
 
-const data = {
-  user: {
-    name: "Needle Ads",
-    email: "needleads@gmail.com",
-    avatar: "/avatars/shadcn.jpg",
-  },
+const userData = {
+  name: "Needle Ads",
+  email: "needleads@gmail.com",
+  avatar: "/avatars/shadcn.jpg",
+}
 
-  navMain: [
+const sidebarData = {
+  admin: [
     {
-      title: "Executive-profile",
-      url: "/executive-profile",
+      title: "Executive Profile",
+      url: "/admin/executive-profile",
       icon: User,
     },
     {
       title: "Daily Attendance",
-      url: "/daily-attendance",
+      url: "/admin/daily-attendance",
       icon: CalendarCheck,
     },
     {
       title: "45-Minute Activity Tracking",
-      url: "/activity",
+      url: "/admin/activity",
       icon: Activity,
     },
     {
       title: "Company Account Management",
-      url: "/company-accounts",
+      url: "/admin/company-accounts",
       icon: Building2,
     },
     {
       title: "Client Accounts Assigned",
-      url: "/client-accounts",
+      url: "/admin/client-accounts",
       icon: Users,
     },
     {
       title: "Task Management",
-      url: "/task-management",
+      url: "/admin/task-management",
       icon: ClipboardList,
     },
     {
       title: "Productivity Analysis",
-      url: "/productivity-analysis",
+      url: "/admin/productivity-analysis",
       icon: TrendingUp,
     },
     {
       title: "Performance Dashboard",
-      url: "/performance-dashboard",
+      url: "/admin/performance-dashboard",
       icon: BarChart3,
     },
     {
       title: "Daily Report",
-      url: "/daily-report",
+      url: "/admin/daily-report",
       icon: FileText,
     },
     {
       title: "Monthly Performance",
-      url: "/monthly-performance",
+      url: "/admin/monthly-performance",
       icon: CalendarDays,
+    },
+  ],
+
+  manager: [
+    {
+      title: "Executive Profile",
+      url: "/manager/executive-profile",
+      icon: User,
+    },
+    {
+      title: "Daily Attendance",
+      url: "/manager/daily-attendance",
+      icon: CalendarCheck,
+    },
+    {
+      title: "Client Accounts Assigned",
+      url: "/manager/client-accounts",
+      icon: Users,
+    },
+    {
+      title: "Task Management",
+      url: "/manager/task-management",
+      icon: ClipboardList,
+    },
+    {
+      title: "Productivity Analysis",
+      url: "/manager/productivity-analysis",
+      icon: TrendingUp,
+    },
+    {
+      title: "Performance Dashboard",
+      url: "/manager/performance-dashboard",
+      icon: BarChart3,
+    },
+    {
+      title: "Daily Report",
+      url: "/manager/daily-report",
+      icon: FileText,
+    },
+    {
+      title: "Monthly Performance",
+      url: "/manager/monthly-performance",
+      icon: CalendarDays,
+    },
+  ],
+
+  employee: [
+    {
+      title: "My Profile",
+      url: "/employee/my-profile",
+      icon: User,
+    },
+    {
+      title: "Daily Attendance",
+      url: "/employee/daily-attendance",
+      icon: CalendarCheck,
+    },
+    {
+      title: "45-Minute Activity Tracking",
+      url: "/employee/activity-tracking",
+      icon: Activity,
+    },
+    {
+      title: "Task Management",
+      url: "/employee/task-management",
+      icon: ClipboardList,
+    },
+    {
+      title: "Daily Report",
+      url: "/employee/daily-report",
+      icon: FileText,
+    },
+    {
+      title: "Monthly Performance",
+      url: "/employee/monthly-performance",
+      icon: CalendarDays,
+    },
+  ],
+
+  client: [
+    {
+      title: "Assigned Project",
+      url: "/client/assigned-project",
+      icon: Users,
+    },
+    {
+      title: "Reports",
+      url: "/client/reports",
+      icon: FileText,
     },
   ],
 }
 
-export function AppSidebar(
-  props: React.ComponentProps<typeof Sidebar>
-) {
+type Role = "admin" | "manager" | "employee" | "client"
+
+export function AppSidebar({
+  role = "admin",
+  ...props
+}: React.ComponentProps<typeof Sidebar> & {
+  role?: Role
+}) {
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader className="flex items-center justify-center p-3">
@@ -102,12 +198,11 @@ export function AppSidebar(
       </SidebarHeader>
 
       <SidebarContent>
-        <NavMain items={data.navMain} />
-
+        <NavMain items={sidebarData[role]} />
       </SidebarContent>
 
       <SidebarFooter>
-        <NavUser user={data.user} />
+        <NavUser user={userData} />
       </SidebarFooter>
 
       <SidebarRail />

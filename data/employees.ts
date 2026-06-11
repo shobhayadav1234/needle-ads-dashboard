@@ -1,3 +1,37 @@
+
+export const pageContent = {
+
+    dailyAttendance: {
+        title: "Daily Attendance (Employee)",
+        subtitle: "Track employee attendance",
+    },
+
+    executiveProfile: {
+        title: "Executive Profile (employee)",
+        subtitle: "Employee information and details",
+    },
+    activityTracking: {
+        title: "45-Minute Activity Tracking(employee)",
+        subtitle: "Track daily employee work activities",
+    },
+    monthlyPerformance: {
+        title: "Monthly Performance(employee)",
+        subtitle: "Track employee monthly performance and achievements",
+    },
+    dailyReport: {
+        title: "Daily Reports(employee)",
+        subtitle: "Add daily reports",
+    },
+    taskManagement: {
+        title: "Task Management(Employee) ",
+        subtitle: "Monitor and manage employee tasks",
+    },
+    myProfile: {
+        title: "My Profile",
+        subtitle: "View your personal and professional information",
+    },
+};
+
 export const employees = [
     {
         id: "NDL-EMP-001",
@@ -200,7 +234,7 @@ export const taskManagement = [
     {
         id: 1,
         taskName: "Create Instagram Posts",
-        client: "ABC School",
+        client: "Prime School",
         assignedDate: "10 Jun 2026",
         dueDate: "12 Jun 2026",
         status: "Pending",
@@ -208,7 +242,7 @@ export const taskManagement = [
     {
         id: 2,
         taskName: "Facebook Campaign Setup",
-        client: "XYZ Builder",
+        client: "Constructor Builder",
         assignedDate: "09 Jun 2026",
         dueDate: "11 Jun 2026",
         status: "In Progress",
@@ -279,54 +313,3 @@ export const monthlyPerformanceData = {
     },
 };
 
-export const pageContent = {
-    executiveProfile: {
-        title: "Executive Profile",
-        subtitle: "Complete employee overview and details",
-    },
-
-    dailyAttendance: {
-        title: "Daily Attendance",
-        subtitle: "Track daily work progress and attendance",
-    },
-
-    activityTracking: {
-        title: "Activity Tracking",
-        subtitle: "45-minute executive work monitoring dashboard",
-    },
-
-    companyAccounts: {
-        title: "Company Account Management",
-        subtitle: "Manage company social media accounts",
-    },
-
-    clientAccounts: {
-        title: "Client Accounts Assigned",
-        subtitle: "Manage assigned client social media accounts",
-    },
-
-    taskManagement: {
-        title: "Task Management",
-        subtitle: "Track assigned and completed tasks",
-    },
-
-    productivityAnalysis: {
-        title: "Productivity Analysis",
-        subtitle: "Employee productivity insights and metrics",
-    },
-
-    performanceDashboard: {
-        title: "Performance Dashboard",
-        subtitle: "Client management and performance tracking",
-    },
-
-    dailyReport: {
-        title: "Daily Report",
-        subtitle: "Submit and track daily work reports",
-    },
-
-    monthlyPerformance: {
-        title: "Monthly Performance",
-        subtitle: "Complete monthly performance overview",
-    },
-};

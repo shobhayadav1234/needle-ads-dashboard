@@ -11,7 +11,8 @@ import {
 
 import { performanceData } from "@/data/employees";
 import PageHeader from "@/components/ui/header";
-import { pageContent } from "@/data/employees";
+import { pageContent } from "@/data/admin";
+
 
 export default function Page() {
   const {

@@ -1,7 +1,7 @@
 "use client";
 
 import { employees } from "@/data/employees";
-import { User, Mail, Phone, CalendarDays, Building2 } from "lucide-react";
+import { User, Mail, Phone, CalendarDays, Building2, Plus } from "lucide-react";
 
 import PageHeader from "@/components/ui/header";
 import { pageContent } from "@/data/employees";
@@ -17,13 +17,30 @@ export default function Page() {
 
   return (
     <div className="min-h-screen bg-slate-50 p-6">
+      {/* Header + Action Buttons */}
+      <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 mb-8">
+        <PageHeader
+          title={pageContent.executiveProfile.title}
+          subtitle={pageContent.executiveProfile.subtitle}
+        />
 
-      {/* HEADER (CRM unified style) */}
-      <PageHeader
-        title={pageContent.executiveProfile.title}
-        subtitle={pageContent.executiveProfile.subtitle}
-      />
+        <div className="flex flex-wrap gap-3">
+          <button className="flex items-center gap-2   bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-medium transition shadow-sm">
+            <Plus size={18} />
+            Add Employee
+          </button>
 
+          <button className="flex items-center gap-2  bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-medium transition shadow-sm">
+            <Plus size={18} />
+            Edit Employee
+          </button>
+
+          <button className="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-5 py-2.5 rounded-xl font-medium transition shadow-sm">
+            <Plus size={18} />
+            Delete Employee
+          </button>
+        </div>
+      </div>
       {/* Grid */}
       <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
 

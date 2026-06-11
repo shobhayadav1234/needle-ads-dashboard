@@ -28,11 +28,11 @@ export default function ActivityPage() {
   return (
     <div className="min-h-screen bg-slate-50 p-6">
 
-         {/* HEADER (CRM unified style) */}
-           <PageHeader
-             title={pageContent.activityTracking.title}
-             subtitle={pageContent.activityTracking.subtitle}
-           />
+      {/* HEADER (CRM unified style) */}
+      <PageHeader
+        title={pageContent.activityTracking.title}
+        subtitle={pageContent.activityTracking.subtitle}
+      />
 
       {/* STATS (same UI exactly like your cards) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 mb-8">
