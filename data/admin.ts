@@ -1,44 +1,44 @@
 export const pageContent = {
     adminActivityTracking: {
-        title: "Activity Tracking(Admin)",
+        title: "Activity Tracking",
         subtitle: "Track employee activities and performance",
     },
 
     companyAccounts: {
-        title: "Company Accounts(Admin)",
+        title: "Company Accounts",
         subtitle: "Manage all social media company accounts",
     },
     clientAccounts: {
-        title: "Client Accounts Assigned (Admin)",
+        title: "Client Accounts Assigned ",
         subtitle: "Manage assigned client social media accounts",
     },
     taskManagement: {
-        title: "Task Management (Admin)",
+        title: "Task Management ",
         subtitle: "Track assigned tasks and their progress",
     },
     performanceDashboard: {
-        title: "Performance Dashboard (Admin)",
+        title: "Performance Dashboard ",
         subtitle: "Monitor employee productivity and performance metrics",
     },
     productivityAnalysis: {
-        title: "Productivity Analysis (Admin)",
+        title: "Productivity Analysis ",
         subtitle: "Monitor productive hours and break management",
     },
     monthlyPerformance: {
-        title: "Monthly Performance Report (Admin)",
+        title: "Monthly Performance Report ",
         subtitle: "Monitor employee monthly performance and achievements",
     },
     dailyReports: {
-        title: "Daily Reports (Admin)",
+        title: "Daily Reports ",
         subtitle: "View all employee daily work reports",
     },
     dailyAttendance: {
-        title: "Daily Attendance (Admin)",
+        title: "Daily Attendance ",
         subtitle: "Track employee attendance",
     },
 
     executiveProfile: {
-        title: "Executive Profile (Admin)",
+        title: "Executive Profile ",
         subtitle: "Employee information and details",
     },
 };

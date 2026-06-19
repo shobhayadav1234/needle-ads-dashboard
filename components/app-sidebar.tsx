@@ -1,7 +1,13 @@
+
 "use client"
 
+import { useRouter } from "next/navigation"
+
+import { LogOut } from "lucide-react"
+import api from "@/lib/api"
 import * as React from "react"
 import Image from "next/image"
+import Link from "next/link"
 
 import { NavMain } from "@/components/nav-main"
 import { NavUser } from "@/components/nav-user"
@@ -25,12 +31,14 @@ import {
   BarChart3,
   FileText,
   CalendarDays,
+  Plus,
 } from "lucide-react"
 
 const userData = {
   name: "Needle Ads",
   email: "needleads@gmail.com",
   avatar: "/avatars/shadcn.jpg",
+
 }
 
 const sidebarData = {
@@ -138,7 +146,7 @@ const sidebarData = {
     },
     {
       title: "Daily Attendance",
-      url: "/employee/daily-attendance",
+      url: "/employee/daily-attendance",  
       icon: CalendarCheck,
     },
     {
@@ -185,8 +193,23 @@ export function AppSidebar({
 }: React.ComponentProps<typeof Sidebar> & {
   role?: Role
 }) {
+  const router = useRouter()
+
+  const handleLogout = async () => {
+    try {
+      await api.post("/auth/logout")
+    } catch (error) {
+      console.error("Logout request failed", error)
+    } finally {
+      localStorage.removeItem("accessToken")
+      localStorage.removeItem("user")
+      router.replace("/")
+    }
+  }
+
   return (
     <Sidebar collapsible="icon" {...props}>
+      {/* Logo */}
       <SidebarHeader className="flex items-center justify-center p-3">
         <Image
           src="/images/needle-ads-logo.png"
@@ -197,14 +220,47 @@ export function AppSidebar({
         />
       </SidebarHeader>
 
+      {/* Menu */}
       <SidebarContent>
         <NavMain items={sidebarData[role]} />
+
+        {role === "admin" && (
+          <div className="px-2 pb-3">
+            <Link
+              href="/admin/departments"
+              className="flex w-full sm:w-36 items-center justify-center gap-2 rounded-lg bg-black py-2 text-sm font-medium text-white transition hover:bg-gray-800"
+            >
+              <Building2 size={16} />
+              <span>Add Department</span>
+            </Link>
+          </div>
+        )}
+        {role === "admin" && (
+          <div className="px-2 pb-3">
+            <Link
+              href="/admin/register"
+              className="flex w-full sm:w-28 items-center justify-center gap-2 rounded-lg py-2 text-sm font-medium bg-black text-white"
+            >
+              <Plus size={18} />
+              <span>Add User</span>
+            </Link>
+          </div>
+        )}
       </SidebarContent>
 
+
+      {/* User Footer */}
       <SidebarFooter>
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="mt-2 mx-auto flex w-full sm:w-28 items-center justify-center gap-2 rounded-lg bg-red-500 py-2 text-sm font-medium text-white hover:bg-red-600 transition"
+        >
+          <LogOut size={16} />
+          <span>Logout</span>
+        </button>
         <NavUser user={userData} />
       </SidebarFooter>
-
       <SidebarRail />
     </Sidebar>
   )

@@ -2,28 +2,28 @@
 export const pageContent = {
 
     dailyAttendance: {
-        title: "Daily Attendance (Employee)",
+        title: "Daily Attendance ",
         subtitle: "Track employee attendance",
     },
 
     executiveProfile: {
-        title: "Executive Profile (employee)",
+        title: "Executive Profile",
         subtitle: "Employee information and details",
     },
     activityTracking: {
-        title: "45-Minute Activity Tracking(employee)",
+        title: "45-Minute Activity Tracking",
         subtitle: "Track daily employee work activities",
     },
     monthlyPerformance: {
-        title: "Monthly Performance(employee)",
+        title: "Monthly Performance",
         subtitle: "Track employee monthly performance and achievements",
     },
     dailyReport: {
-        title: "Daily Reports(employee)",
+        title: "Daily Reports",
         subtitle: "Add daily reports",
     },
     taskManagement: {
-        title: "Task Management(Employee) ",
+        title: "Task Management ",
         subtitle: "Monitor and manage employee tasks",
     },
     myProfile: {

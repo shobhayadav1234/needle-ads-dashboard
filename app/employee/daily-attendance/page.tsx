@@ -2,71 +2,118 @@
 
 import { useState } from "react";
 import {
-    dailyAttendance,
-    employees,
-    pageContent,
-} from "@/data/admin";
+    checkIn,
+    checkOut,
+    breakIn,
+    breakOut,
+} from "@/services/attendance";
 
 import {
-    LogIn,
-    LogOut,
-    Coffee,
-    Clock3,
     User,
     CalendarDays,
 } from "lucide-react";
 
 import PageHeader from "@/components/ui/header";
 
-export default function DailyAttendancePage() {
-    const attendance = dailyAttendance?.[0];
-    const employee = employees?.[0];
+type AttendanceState = {
+    checkIn?: string | Date | null;
+    checkOut?: string | Date | null;
+    breakIn?: string | Date | null;
+    breakOut?: string | Date | null;
+    totalWorkMinutes?: number;
+};
 
-    const [loginTime, setLoginTime] = useState(
-        attendance?.loginTime || "--:--"
-    );
-    const [logoutTime, setLogoutTime] = useState(
-        attendance?.logoutTime || "--:--"
-    );
-    const [breakTime, setBreakTime] = useState(
-        attendance?.breakTime || "00:00"
-    );
+type EmployeeState = {
+    name: string;
+    designation: string;
+    employeeId: string;
+    profilePhoto: string;
+};
 
-    if (!attendance || !employee) {
-        return (
-            <div className="min-h-screen flex items-center justify-center text-gray-500">
-                No attendance data found
-            </div>
-        );
+const getInitialAttendance = (): AttendanceState => ({
+    checkIn: null,
+    checkOut: null,
+    breakIn: null,
+    breakOut: null,
+    totalWorkMinutes: 0,
+});
+
+const getInitialEmployee = (): EmployeeState => {
+    if (typeof window === "undefined") {
+        return {
+            name: "Employee",
+            designation: "Employee",
+            employeeId: "--",
+            profilePhoto: "/images/needle-ads-logo.png",
+        };
     }
 
-    const getCurrentTime = () =>
-        new Date().toLocaleTimeString([], {
-            hour: "2-digit",
-            minute: "2-digit",
-        });
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const userDetail = JSON.parse(localStorage.getItem("userDetail") || "{}");
 
-    const handleLogin = () => {
-        setLoginTime(getCurrentTime());
+    return {
+        name: user.name || "Employee",
+        designation: userDetail.designation || "Employee",
+        employeeId: userDetail.employeeId || "--",
+        profilePhoto:
+            userDetail.profilePic ||
+            userDetail.profilePhoto ||
+            "/images/needle-ads-logo.png",
+    };
+};
+
+export default function DailyAttendancePage() {
+    const [attendance, setAttendance] = useState<AttendanceState>(getInitialAttendance);
+    const [employee] = useState<EmployeeState>(getInitialEmployee);
+
+    // ================= ACTIONS =================
+
+    const handleLogin = async () => {
+        try {
+            const res = await checkIn();
+            setAttendance(res.attendance as AttendanceState);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
-    const handleLogout = () => {
-        setLogoutTime(getCurrentTime());
+    const handleLogout = async () => {
+        try {
+            const res = await checkOut();
+            setAttendance(res.attendance as AttendanceState);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
-    const handleBreak = () => {
-        setBreakTime(getCurrentTime());
+    const handleBreakStart = async () => {
+        try {
+            const res = await breakIn();
+            setAttendance(res.attendance as AttendanceState);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const handleBreakEnd = async () => {
+        try {
+            const res = await breakOut();
+            setAttendance(res.attendance as AttendanceState);
+        } catch (err) {
+            console.error(err);
+        }
     };
 
     return (
         <div className="min-h-screen bg-slate-50 p-6">
-            {/* Header */}
+
+            {/* HEADER */}
             <PageHeader
-                title={pageContent.dailyAttendance.title}
-                subtitle={pageContent.dailyAttendance.subtitle}
+                title="Daily Attendance"
+                subtitle="Track your working hours"
             />
 
-            {/* Employee Card */}
+            {/* EMPLOYEE CARD */}
             <div className="mb-8 rounded-2xl border bg-white p-6 shadow-sm">
                 <div className="flex flex-col items-center gap-4 md:flex-row">
                     <img
@@ -88,138 +135,97 @@ export default function DailyAttendancePage() {
 
                             <div className="flex items-center gap-2">
                                 <CalendarDays size={16} />
-                                {employee.id}
+                                {employee.employeeId}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            {/* Attendance Cards */}
+            {/* ATTENDANCE CARDS */}
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
-                {/* Login */}
-                <div className="rounded-2xl bg-white p-6 shadow-sm border hover:shadow-md transition">
-                    <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-slate-600">
-                            Login Time
-                        </h3>
 
-                        <div className="rounded-xl bg-green-100 p-3">
-                            <LogIn className="text-green-600" size={22} />
-                        </div>
-                    </div>
+                {/* LOGIN */}
+                <div className="rounded-2xl bg-white p-6 shadow-sm border">
+                    <h3 className="font-semibold">Check In</h3>
 
-                    <p className="mt-5 text-3xl font-bold text-slate-800">
-                        {loginTime}
+                    <p className="text-2xl mt-4 font-bold">
+                        {attendance.checkIn
+                            ? new Date(attendance.checkIn).toLocaleTimeString()
+                            : "--:--"}
                     </p>
 
                     <button
                         onClick={handleLogin}
-                        className="mt-5 w-full rounded-xl bg-green-600 py-2.5 font-medium text-white hover:bg-green-700 transition"
+                        className="mt-5 w-full bg-green-600 text-white py-2 rounded-xl"
                     >
                         Login
                     </button>
                 </div>
 
-                {/* Logout */}
-                <div className="rounded-2xl bg-white p-6 shadow-sm border hover:shadow-md transition">
-                    <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-slate-600">
-                            Logout Time
-                        </h3>
+                {/* LOGOUT */}
+                <div className="rounded-2xl bg-white p-6 shadow-sm border">
+                    <h3 className="font-semibold">Check Out</h3>
 
-                        <div className="rounded-xl bg-red-100 p-3">
-                            <LogOut className="text-red-600" size={22} />
-                        </div>
-                    </div>
-
-                    <p className="mt-5 text-3xl font-bold text-slate-800">
-                        {logoutTime}
+                    <p className="text-2xl mt-4 font-bold">
+                        {attendance.checkOut
+                            ? new Date(attendance.checkOut).toLocaleTimeString()
+                            : "--:--"}
                     </p>
 
                     <button
                         onClick={handleLogout}
-                        className="mt-5 w-full rounded-xl bg-red-600 py-2.5 font-medium text-white hover:bg-red-700 transition"
+                        className="mt-5 w-full bg-red-600 text-white py-2 rounded-xl"
                     >
                         Logout
                     </button>
                 </div>
 
-                {/* Break */}
-                <div className="rounded-2xl bg-white p-6 shadow-sm border hover:shadow-md transition">
-                    <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-slate-600">
-                            Break Time
-                        </h3>
+                {/* BREAK */}
+                <div className="rounded-2xl bg-white p-6 shadow-sm border">
+                    <h3 className="font-semibold">Break</h3>
 
-                        <div className="rounded-xl bg-yellow-100 p-3">
-                            <Coffee className="text-yellow-600" size={22} />
-                        </div>
-                    </div>
+                    <p className="text-lg mt-4">
+                        IN:{" "}
+                        {attendance.breakIn
+                            ? new Date(attendance.breakIn).toLocaleTimeString()
+                            : "--"}
+                    </p>
 
-                    <p className="mt-5 text-3xl font-bold text-slate-800">
-                        {breakTime}
+                    <p className="text-lg">
+                        OUT:{" "}
+                        {attendance.breakOut
+                            ? new Date(attendance.breakOut).toLocaleTimeString()
+                            : "--"}
                     </p>
 
                     <button
-                        onClick={handleBreak}
-                        className="mt-5 w-full rounded-xl bg-yellow-500 py-2.5 font-medium text-white hover:bg-yellow-600 transition"
+                        onClick={handleBreakStart}
+                        className="mt-4 w-full bg-yellow-500 text-white py-2 rounded-xl"
                     >
                         Start Break
                     </button>
+
+                    <button
+                        onClick={handleBreakEnd}
+                        className="mt-2 w-full bg-gray-700 text-white py-2 rounded-xl"
+                    >
+                        End Break
+                    </button>
                 </div>
 
-                {/* Working Hours */}
-                <div className="rounded-2xl bg-white p-6 shadow-sm border hover:shadow-md transition">
-                    <div className="flex items-center justify-between">
-                        <h3 className="font-semibold text-slate-600">
-                            Working Hours
-                        </h3>
+                {/* WORKING HOURS */}
+                <div className="rounded-2xl bg-white p-6 shadow-sm border">
+                    <h3 className="font-semibold">Working Hours</h3>
 
-                        <div className="rounded-xl bg-blue-100 p-3">
-                            <Clock3 className="text-blue-600" size={22} />
-                        </div>
-                    </div>
-
-                    <p className="mt-5 text-3xl font-bold text-slate-800">
-                        {attendance.totalWorkingHours}
+                    <p className="text-3xl mt-4 font-bold text-blue-600">
+                        {attendance.totalWorkMinutes
+                            ? (attendance.totalWorkMinutes / 60).toFixed(2) + " hrs"
+                            : "0 hrs"}
                     </p>
 
-                    <div className="mt-5 rounded-xl bg-blue-50 p-3 text-center text-sm font-medium text-blue-700">
-                        Today's Productivity
-                    </div>
-                </div>
-            </div>
-
-            {/* Attendance Summary */}
-            <div className="mt-8 rounded-2xl border bg-white p-6 shadow-sm">
-                <h3 className="mb-4 text-lg font-semibold">
-                    Attendance Summary
-                </h3>
-
-                <div className="grid gap-4 md:grid-cols-4">
-                    <div className="rounded-xl bg-slate-50 p-4">
-                        <p className="text-sm text-slate-500">Login</p>
-                        <p className="font-bold">{loginTime}</p>
-                    </div>
-
-                    <div className="rounded-xl bg-slate-50 p-4">
-                        <p className="text-sm text-slate-500">Logout</p>
-                        <p className="font-bold">{logoutTime}</p>
-                    </div>
-
-                    <div className="rounded-xl bg-slate-50 p-4">
-                        <p className="text-sm text-slate-500">Break</p>
-                        <p className="font-bold">{breakTime}</p>
-                    </div>
-
-                    <div className="rounded-xl bg-slate-50 p-4">
-                        <p className="text-sm text-slate-500">
-                            Working Hours
-                        </p>
-                        <p className="font-bold">
-                            {attendance.totalWorkingHours}
-                        </p>
+                    <div className="mt-3 text-sm text-blue-600">
+                        Productivity Tracking
                     </div>
                 </div>
             </div>

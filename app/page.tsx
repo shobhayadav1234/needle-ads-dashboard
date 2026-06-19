@@ -1,118 +1,166 @@
 "use client";
 
-import { employees } from "@/data/employees";
-import { User, Mail, Phone, CalendarDays, Building2 } from "lucide-react";
+import { useState } from "react";
+import Image from "next/image";
+import api from "@/lib/api"; // 
 
-import PageHeader from "@/components/ui/header";
-import { pageContent } from "@/data/employees";
+export default function AuthPage() {
+  const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
-export default function Page() {
-  if (!employees || employees.length === 0) {
-    return (
-      <div className="min-h-screen flex items-center justify-center text-gray-500">
-        No employee found
-      </div>
-    );
-  }
+  const [message, setMessage] = useState<{
+    type: "success" | "error" | "";
+    text: string;
+  }>({ type: "", text: "" });
+
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+
+  const showMsg = (type: "success" | "error", text: string) => {
+    setMessage({ type, text });
+
+    setTimeout(() => {
+      setMessage({ type: "", text: "" });
+    }, 3000);
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      setLoading(true);
+
+      const { data } = await api.post("/auth/login", {
+        email: formData.email,
+        password: formData.password,
+      });
+
+      if (!data?.success) {
+        throw new Error(data?.message || "Login failed");
+      }
+
+      const { accessToken, user, userDetail } = data;
+
+      // store auth
+      localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("user", JSON.stringify(user));
+      if (userDetail) {
+        localStorage.setItem("userDetail", JSON.stringify(userDetail));
+      }
+
+      showMsg("success", "Login successful 🎉");
+
+      // role-based routing
+      const role = user?.role;
+
+      const routes: Record<string, string> = {
+        admin: "/admin/executive-profile",
+        manager: "/manager/executive-profile",
+        employee: "/employee/my-profile",
+        client: "/client/assigned-project",
+      };
+
+      const redirectTo = routes[role || ""] || "/";
+
+      setTimeout(() => {
+        window.location.href = redirectTo;
+      }, 500);
+    } catch (err) {
+      console.error("Login Error:", err);
+
+      const error = err as {
+        response?: { data?: { message?: string } };
+        message?: string;
+      };
+
+      showMsg(
+        "error",
+        error.response?.data?.message || error.message || "Login failed"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-slate-50 p-6">
 
-      {/* HEADER (CRM unified style) */}
-      <PageHeader
-        title={pageContent.executiveProfile.title}
-        subtitle={pageContent.executiveProfile.subtitle}
-      />
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 px-4">
 
-      {/* Grid */}
-      <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      <div className="w-full max-w-md bg-white shadow-xl rounded-2xl p-6 sm:p-8">
 
-        {employees.slice(0, 5).map((employee) => (
+        {/* MESSAGE */}
+        {message.text && (
           <div
-            key={employee.id}
-            className="rounded-2xl border bg-white p-6 shadow-sm hover:shadow-md transition"
+            className={`mb-4 p-3 text-sm rounded text-center font-medium ${message.type === "success"
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+              }`}
           >
-
-            {/* Top Profile Section */}
-            <div className="flex items-center gap-4 mb-5">
-
-              <img
-                src={employee.profilePhoto}
-                alt={employee.name}
-                className="h-20 w-20 rounded-full border-4 border-slate-100 object-cover"
-              />
-
-              <div>
-                <h2 className="text-xl font-bold text-slate-800">
-                  {employee.name}
-                </h2>
-
-                <p className="text-sm text-slate-500">
-                  {employee.designation}
-                </p>
-
-                <div className="mt-1 flex items-center gap-2 text-xs text-slate-500">
-                  <Building2 size={14} />
-                  {employee.department}
-                </div>
-              </div>
-
-            </div>
-
-            {/* Details (Attendance card style) */}
-            <div className="space-y-3 text-sm">
-
-              <div className="flex items-center justify-between">
-                <span className="text-slate-500 flex items-center gap-2">
-                  <User size={14} /> ID
-                </span>
-                <span className="font-medium">{employee.id}</span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-slate-500 flex items-center gap-2">
-                  <Phone size={14} /> Mobile
-                </span>
-                <span className="font-medium">{employee.mobile}</span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-slate-500 flex items-center gap-2">
-                  <Mail size={14} /> Email
-                </span>
-                <span className="font-medium truncate max-w-[160px]">
-                  {employee.email}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-slate-500 flex items-center gap-2">
-                  <CalendarDays size={14} /> Joining
-                </span>
-                <span className="font-medium">
-                  {employee.joiningDate}
-                </span>
-              </div>
-
-              <div className="flex items-center justify-between">
-                <span className="text-slate-500">
-                  Manager
-                </span>
-                <span className="font-medium">
-                  {employee.reportingManager}
-                </span>
-              </div>
-
-            </div>
-
-            {/* Button (Attendance style) */}
-            <button className="mt-5 w-full rounded-xl bg-slate-900 py-2.5 text-white font-medium hover:bg-slate-800 transition">
-              View Profile
-            </button>
-
+            {message.text}
           </div>
-        ))}
+        )}
 
+        {/* LOGO */}
+        <div className="flex flex-col items-center mb-8">
+          <Image
+            src="/images/needle-ads-logo.png"
+            alt="logo"
+            width={150}
+            height={50}
+          />
+          <p className="text-sm text-gray-500 mt-2">
+            Pinpoint Growth Strategy
+          </p>
+        </div>
+
+        {/* FORM */}
+        <form onSubmit={handleSubmit} className="space-y-4">
+
+          {/* EMAIL */}
+          <input
+            type="email"
+            placeholder="Email"
+            className="w-full p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={formData.email}
+            onChange={(e) =>
+              setFormData({ ...formData, email: e.target.value })
+            }
+            required
+          />
+
+          {/* PASSWORD */}
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              className="w-full p-3 border rounded-lg pr-16 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              value={formData.password}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
+              required
+            />
+
+            <button
+              type="button"
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-sm text-blue-600"
+              onClick={() => setShowPassword(!showPassword)}
+            >
+              {showPassword ? "Hide" : "Show"}
+            </button>
+          </div>
+
+          {/* BUTTON */}
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full p-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold transition disabled:opacity-50"
+          >
+            {loading ? "Loading..." : "Login"}
+          </button>
+        </form>
       </div>
     </div>
   );

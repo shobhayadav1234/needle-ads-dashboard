@@ -1,34 +1,34 @@
 export const pageContent = {
     clientAccounts: {
-        title: "Client Accounts Assigned (Manager)",
+        title: "Client Accounts Assigned ",
         subtitle: "Manage assigned client accounts",
     },
     dailyAttendance: {
-        title: " Daily Attendance(Manager)",
+        title: " Daily Attendance",
         subtitle: "Monitor attendance of all employees",
     },
     dailyReport: {
-        title: "Daily Reports(Manager)",
+        title: "Daily Reports",
         subtitle: "View daily reports submitted by employees",
     },
     executiveProfile: {
-        title: "Employee Profiles(Manager)",
+        title: "Employee Profiles",
         subtitle: "View and manage all employees",
     },
     monthlyPerformance: {
-        title: "Monthly Performance (Manager)",
+        title: "Monthly Performance ",
         subtitle: "Track employee monthly performance",
     },
     productivityAnalysis: {
-        title: "Productivity Analysis(Manager)",
+        title: "Productivity Analysis",
         subtitle: "Monitor employee productivity and break management",
     },
     performanceDashboard: {
-        title: "Performance Dashboard (Manager)",
+        title: "Performance Dashboard ",
         subtitle: "Track overall social media and client management performance",
     },
     taskManagement: {
-        title: "Task Management(Manager) ",
+        title: "Task Management",
         subtitle: "Monitor and manage employee tasks",
     },
 };
